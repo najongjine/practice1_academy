@@ -6,6 +6,14 @@ import { Hono } from "hono";
  */
 const app = new Hono();
 
+function fetchData(): Promise<string> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("데이터를 성공적으로 가져왔습니다!");
+    }, 1000);
+  });
+}
+
 /** 고객 요청 창구를 개설
  * get method 방식, "/" 경로로 요청을 받겠다
  */
