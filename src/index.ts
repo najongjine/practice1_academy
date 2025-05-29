@@ -38,7 +38,7 @@ app.get("/", async (c) => {
   // 빠른코드
   let data: any;
   // 느린코드
-  data = dummy1Repo.find();
+  data = await dummy1Repo.find();
   //빠른코드
   let dummy2 = 1 + 1;
   //빠른코드
