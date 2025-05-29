@@ -1,10 +1,28 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
+import { AppDataSource } from "./data-source1";
+import * as dotenv from "dotenv";
 
 /** 쿠팡 회사를 설립한거와 비슷
  * 웹 서버의 핵심 객체를 만듬
  */
 const app = new Hono();
+
+const envFile =
+  process.env.NODE_ENV === "production"
+    ? ".env.production"
+    : ".env.development";
+dotenv.config({ path: envFile });
+
+/** DB 연결 */
+AppDataSource.initialize()
+  .then(() => {
+    console.log("Data Source has been initialized!");
+  })
+  .catch((err) => {
+    console.error("Error during Data Source initialization:", err);
+  });
+/** DB 연결 END */
 
 function fetchData(): Promise<string> {
   return new Promise((resolve) => {
