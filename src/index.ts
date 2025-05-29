@@ -32,11 +32,16 @@ app.get("/", async (c) => {
   // t_dummy1 이라는 테이블을 코드로 바꾼놈. t_dummy1 테이블 조작을 위한 준비
   // getRepository() 함수가 퉤 하고 뱉은 객체를 dummy1Repo 라는 변수로 받음
   // const는 값 바꾸지 말아라
+  // 빠른코드
   const dummy1Repo = AppDataSource.getRepository(TDummy1);
 
+  // 빠른코드
   let data: any;
+  // 느린코드
   data = dummy1Repo.find();
+  //빠른코드
   let dummy2 = 1 + 1;
+  //빠른코드
   return c.json({ data, dummy2 });
 });
 
