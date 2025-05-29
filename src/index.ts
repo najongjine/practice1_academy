@@ -2,6 +2,7 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { AppDataSource } from "./data-source1";
 import * as dotenv from "dotenv";
+import { TDummy1 } from "./entities/TDummy1";
 
 /** 쿠팡 회사를 설립한거와 비슷
  * 웹 서버의 핵심 객체를 만듬
@@ -24,22 +25,19 @@ AppDataSource.initialize()
   });
 /** DB 연결 END */
 
-function fetchData(): Promise<string> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      console.log("fetchdata 입니다");
-    }, 1);
-  });
-}
-
 /** 고객 요청 창구를 개설
  * get method 방식, "/" 경로로 요청을 받겠다
  */
 app.get("/", async (c) => {
-  // c 라는 놈은, 요청 & 응답 기능을 가지고 있다
-  await fetchData(); // print("어쩌구저쩌구")
-  console.log(`1+1=${1 + 1}`);
-  return c.text("Hello Hono!");
+  // t_dummy1 이라는 테이블을 코드로 바꾼놈. t_dummy1 테이블 조작을 위한 준비
+  // getRepository() 함수가 퉤 하고 뱉은 객체를 dummy1Repo 라는 변수로 받음
+  // const는 값 바꾸지 말아라
+  const dummy1Repo = AppDataSource.getRepository(TDummy1);
+
+  let data: any;
+  data = dummy1Repo.find();
+  let dummy2 = 1 + 1;
+  return c.json({ data, dummy2 });
 });
 
 /** 회사 운영 시작
