@@ -15,6 +15,7 @@ router.get("/", (c) => {
     result.success = false;
     result.data = null;
     result.message = `!!! test1.get 에러. ${error?.message ?? ""}`;
+    return c.json(result);
   }
 });
 
