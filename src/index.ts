@@ -4,6 +4,8 @@ import { AppDataSource } from "./data-source1";
 import * as dotenv from "dotenv";
 import { TDummy1 } from "./entities/TDummy1";
 
+import test1_route from "./router/test1/test1_route";
+
 /** 쿠팡 회사를 설립한거와 비슷
  * 웹 서버의 핵심 객체를 만듬
  */
