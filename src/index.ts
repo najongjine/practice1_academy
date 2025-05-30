@@ -17,6 +17,9 @@ const envFile =
     : ".env.development";
 dotenv.config({ path: envFile });
 
+// 내가 만든 router 등록
+app.route("/test1", test1_route);
+
 /** DB 연결 */
 AppDataSource.initialize()
   .then(() => {
