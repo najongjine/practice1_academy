@@ -11,7 +11,11 @@ router.get("/", (c) => {
   };
   try {
     return c.json(result);
-  } catch (error: any) {}
+  } catch (error: any) {
+    result.success = false;
+    result.data = null;
+    result.message = `!!! test1.get 에러. ${error?.message ?? ""}`;
+  }
 });
 
 router.get("/:id", (c) => {
