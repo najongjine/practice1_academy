@@ -1,9 +1,10 @@
 import { Hono } from "hono";
 import { AppDataSource } from "../../data-source1";
+import { TDummy1 } from "../../entities/TDummy1";
 
 const router = new Hono();
 
-router.get("/", (c) => {
+router.get("/", async (c) => {
   let result: { success: boolean; data: any; code: string; message: string } = {
     success: true,
     data: null,
@@ -11,6 +12,9 @@ router.get("/", (c) => {
     message: ``,
   };
   try {
+    const dummy1Repo = AppDataSource.getRepository(TDummy1);
+    let data = await dummy1Repo.find({ take: 1000 });
+    result.data = data;
     return c.json(result);
   } catch (error: any) {
     result.success = false;
