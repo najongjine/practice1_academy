@@ -9,7 +9,9 @@ router.get("/", (c) => {
     code: "",
     message: ``,
   };
-  return c.json("👤 유저 목록");
+  try {
+    return c.json(result);
+  } catch (error: any) {}
 });
 
 router.get("/:id", (c) => {
