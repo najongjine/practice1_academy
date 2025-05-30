@@ -4,6 +4,7 @@ import { TDummy1 } from "../../entities/TDummy1";
 
 const router = new Hono();
 
+// async = 이 함수 안에 느린코드 있어. 라고 준비시켜줌
 router.get("/", async (c) => {
   // 자료구조화된 객체
   let result: { success: boolean; data: any; code: string; message: string } = {
