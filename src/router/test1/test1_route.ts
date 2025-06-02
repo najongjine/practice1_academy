@@ -113,8 +113,7 @@ router.post("/delete", async (c) => {
     // AppDataSource == DB   t_dummy1 테이블에 접근할 준비를 해라. 전문용어로 repository
     const dummy1Repo = AppDataSource.getRepository(TDummy1);
 
-    let existData =
-      (await dummy1Repo.findOne({ where: { idp: idp } })) ?? new TDummy1();
+    await dummy1Repo.delete({ idp: idp });
 
     // 클라이언트에 보내줌
     return c.json(result);
