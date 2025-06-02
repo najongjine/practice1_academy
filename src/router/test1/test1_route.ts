@@ -78,7 +78,8 @@ router.post("/update", async (c) => {
     let _body: any = await c.req.json(); // JSON 형태로 body 파싱
 
     let name: string = _body?.name ?? "";
-    let idp = Number(_body?.idp) ?? 0;
+    let idp = Number(_body?.idp ?? 0);
+    console.log(idp);
     // AppDataSource == DB   t_dummy1 테이블에 접근할 준비를 해라. 전문용어로 repository
     const dummy1Repo = AppDataSource.getRepository(TDummy1);
 
