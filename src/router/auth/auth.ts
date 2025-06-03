@@ -5,6 +5,9 @@ import {
   generateToken,
   verifyToken,
 } from "../../utils/utils";
+import { TUser } from "../../entities/TUser";
+import { AppDataSource } from "../../data-source1";
+// .. 은 상위 폴더     상위 -> 상위 -> utils 폴더 -> utils 파일
 
 const auth = new Hono();
 
@@ -14,22 +17,37 @@ interface User {
   password: string; // 해시된 비밀번호
 }
 
-const users: User[] = [];
-
 // 회원가입
 auth.post("/register", async (c) => {
-  const { username, password } = await c.req.json();
-  const existingUser = users.find((u) => u.username === username);
-  if (existingUser) {
-    return c.json({ message: "이미 존재하는 사용자입니다." }, 400);
-  }
-  const hashedPassword = await hashPassword(password);
-  const newUser: User = {
-    id: users.length + 1,
-    username,
-    password: hashedPassword,
+  let result: { success: boolean; data: any; code: string; message: string } = {
+    success: true,
+    data: null,
+    code: "",
+    message: ``,
   };
-  users.push(newUser);
+  try {
+    const reqs = await c.req.json();
+    let username = String(reqs?.username ?? "");
+    let password = String(reqs?.password ?? "");
+    const userRepo = AppDataSource.getRepository(TUser);
+    let userData =
+      (await userRepo.findOne({ where: { username: username } })) ??
+      new TUser();
+    if (userData?.idp) {
+      result.success = false;
+      result.message = "이미 가입된 회원입니다";
+      return c.json(result);
+    }
+    const hashedPassword = await hashPassword(password);
+    userData.username = username;
+    userData.password = hashedPassword;
+    userData = await userRepo.save(userData);
+  } catch (error: any) {
+    result.success = false;
+    result.message = `!!! auth/register error. ${error?.message ?? ""}`;
+    return c.json(result);
+  }
+
   return c.json({ message: "회원가입이 완료되었습니다." }, 201);
 });
 
