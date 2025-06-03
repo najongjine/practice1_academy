@@ -128,6 +128,7 @@ router.post("/upsert", async (c) => {
       return c.json(result);
     }
     existData.name = name;
+    // 이제 진짜 DB에 데이터 수정이나 저장 해라.
     existData = await dummy1Repo.save(existData);
     result.data = existData;
     // 클라이언트에 보내줌
