@@ -116,6 +116,10 @@ router.post("/upsert", async (c) => {
 
     let existData =
       (await dummy1Repo.findOne({ where: { idp: idp } })) ?? new TDummy1();
+    if (idp && !existData?.idp) {
+      result.success = false;
+      result.message = "없는 데이터를 수정하려 합니다. 반려처리 하겠습니다";
+    }
     existData.name = name;
     existData = await dummy1Repo.save(existData);
     result.data = existData;
