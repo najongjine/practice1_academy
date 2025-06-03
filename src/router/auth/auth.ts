@@ -70,7 +70,7 @@ auth.post("/login", async (c) => {
     let userData =
       (await userRepo.findOne({ where: { username: username } })) ??
       new TUser();
-    if (userData?.idp) {
+    if (!userData?.idp) {
       result.success = false;
       result.message = "잘못된 회원입니다";
       return c.json(result);
