@@ -32,12 +32,19 @@ auth.post("/register", async (c) => {
       result.message = "이미 가입된 회원입니다";
       return c.json(result);
     }
+    // 암호화. 단방향
     const hashedPassword = await hashPassword(password);
+    // new TUser() 이건 findOne 할때 원펀치로 다 해결
     userData.username = username;
     userData.password = hashedPassword;
+    // commit. 진짜 저장
     userData = await userRepo.save(userData);
+
     userData.password = "";
+
+    // 민증 발급. "999d" 이뜻은 만료기한 999일
     let userToken = generateToken(userData, "999d");
+    // 유저의 회원가입 정보 전체 + 민증 data에 실어서 보내기
     result.data = { userData: userData, userToken: userToken };
     return c.json(result);
   } catch (error: any) {
