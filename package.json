@@ -9,16 +9,20 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.14.3",
+    "bcrypt": "^6.0.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.5.0",
-    "hono": "^4.7.10",
+    "hono": "^4.7.11",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.0",
     "reflect-metadata": "^0.2.2",
     "rimraf": "^6.0.1",
     "typeorm": "^0.3.24"
   },
   "devDependencies": {
-    "@types/node": "^20.17.52",
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^20.17.57",
     "ts-node": "^10.9.2",
     "tsx": "^4.7.1",
     "typescript": "^5.8.3"
