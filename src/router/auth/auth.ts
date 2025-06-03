@@ -56,17 +56,44 @@ auth.post("/register", async (c) => {
 
 // 로그인
 auth.post("/login", async (c) => {
-  const { username, password } = await c.req.json();
-  const user = users.find((u) => u.username === username);
-  if (!user) {
-    return c.json({ message: "사용자를 찾을 수 없습니다." }, 404);
+  let result: { success: boolean; data: any; code: string; message: string } = {
+    success: true,
+    data: null,
+    code: "",
+    message: ``,
+  };
+  try {
+    const reqs = await c.req.json();
+    let username = String(reqs?.username ?? "");
+    let password = String(reqs?.password ?? "");
+    const userRepo = AppDataSource.getRepository(TUser);
+    let userData =
+      (await userRepo.findOne({ where: { username: username } })) ??
+      new TUser();
+    if (userData?.idp) {
+      result.success = false;
+      result.message = "잘못된 회원입니다";
+      return c.json(result);
+    }
+
+    if (!comparePassword(password, userData.password)) {
+      result.success = false;
+      result.message = "잘못된 회원입니다";
+      return c.json(result);
+    }
+
+    userData.password = "";
+
+    // 민증 발급. "999d" 이뜻은 만료기한 999일
+    let userToken = generateToken(userData, "999d");
+    // 유저의 회원가입 정보 전체 + 민증 data에 실어서 보내기
+    result.data = { userData: userData, userToken: userToken };
+    return c.json(result);
+  } catch (error: any) {
+    result.success = false;
+    result.message = `!!! auth/login error. ${error?.message ?? ""}`;
+    return c.json(result);
   }
-  const isValid = await comparePassword(password, user.password);
-  if (!isValid) {
-    return c.json({ message: "비밀번호가 일치하지 않습니다." }, 401);
-  }
-  const token = generateToken({ id: user.id, username: user.username });
-  return c.json({ token });
 });
 
 // 보호된 라우트
