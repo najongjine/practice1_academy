@@ -36,13 +36,15 @@ auth.post("/register", async (c) => {
     userData.username = username;
     userData.password = hashedPassword;
     userData = await userRepo.save(userData);
+    userData.password = "";
+    let userToken = generateToken(userData, "999d");
+    result.data = { userData: userData, userToken: userToken };
+    return c.json(result);
   } catch (error: any) {
     result.success = false;
     result.message = `!!! auth/register error. ${error?.message ?? ""}`;
     return c.json(result);
   }
-
-  return c.json({ message: "회원가입이 완료되었습니다." }, 201);
 });
 
 // 로그인
