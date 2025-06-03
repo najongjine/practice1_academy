@@ -119,6 +119,7 @@ router.post("/upsert", async (c) => {
     if (idp && !existData?.idp) {
       result.success = false;
       result.message = "없는 데이터를 수정하려 합니다. 반려처리 하겠습니다";
+      return c.json(result);
     }
     existData.name = name;
     existData = await dummy1Repo.save(existData);
