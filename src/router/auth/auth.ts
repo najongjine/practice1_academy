@@ -11,12 +11,6 @@ import { AppDataSource } from "../../data-source1";
 
 const auth = new Hono();
 
-interface User {
-  id: number;
-  username: string;
-  password: string; // 해시된 비밀번호
-}
-
 // 회원가입
 auth.post("/register", async (c) => {
   let result: { success: boolean; data: any; code: string; message: string } = {
