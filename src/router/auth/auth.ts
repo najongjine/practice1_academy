@@ -7,6 +7,7 @@ import {
 } from "../../utils/utils";
 import { TUser } from "../../entities/TUser";
 import { AppDataSource } from "../../data-source1";
+import { instanceToPlain } from "class-transformer";
 // .. 은 상위 폴더     상위 -> 상위 -> utils 폴더 -> utils 파일
 
 const auth = new Hono();
@@ -42,8 +43,10 @@ auth.post("/register", async (c) => {
 
     userData.password = "";
 
+    let payload = instanceToPlain(userData);
+
     // 민증 발급. "999d" 이뜻은 만료기한 999일
-    let userToken = generateToken(userData, "999d");
+    let userToken = generateToken(payload, "999d");
     // 유저의 회원가입 정보 전체 + 민증 data에 실어서 보내기
     result.data = { userData: userData, userToken: userToken };
     return c.json(result);
