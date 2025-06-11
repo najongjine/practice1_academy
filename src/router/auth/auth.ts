@@ -105,16 +105,28 @@ auth.post("/login", async (c) => {
 
 // 보호된 라우트
 auth.get("/protected", async (c) => {
-  const authHeader = c.req.header("Authorization");
-  if (!authHeader) {
-    return c.json({ message: "토큰이 제공되지 않았습니다." }, 401);
+  let result: { success: boolean; data: any; code: string; message: string } = {
+    success: true,
+    data: null,
+    code: "",
+    message: ``,
+  };
+  try {
+    const authHeader = c?.req?.header("Authorization");
+    const token = authHeader.split(" ")[1];
+    const decoded: any = verifyToken(token);
+    console.log(decoded);
+    const hasMasterRole = decoded?.tUserRoles?.some(
+      (role) => role.roleName === "master"
+    );
+    if (hasMasterRole) result.data = `마스터 권한이 있습니다`;
+    else result.data = `마스터 권한이 없습니다`;
+    return c.json(result);
+  } catch (error: any) {
+    result.success = false;
+    result.message = error?.message ?? "";
+    return c.json(result);
   }
-  const token = authHeader.split(" ")[1];
-  const decoded = verifyToken(token);
-  if (!decoded) {
-    return c.json({ message: "유효하지 않은 토큰입니다." }, 403);
-  }
-  return c.json({ message: "접근이 허용되었습니다.", user: decoded });
 });
 
 export default auth;
