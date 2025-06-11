@@ -26,8 +26,10 @@ auth.post("/register", async (c) => {
     let password = String(reqs?.password ?? "");
     const userRepo = AppDataSource.getRepository(TUser);
     let userData =
-      (await userRepo.findOne({ where: { username: username } })) ??
-      new TUser();
+      (await userRepo.findOne({
+        where: { username: username },
+        relations: { tUserRoles: true },
+      })) ?? new TUser();
     if (userData?.idp) {
       result.success = false;
       result.message = "이미 가입된 회원입니다";
