@@ -83,16 +83,17 @@ auth.post("/login", async (c) => {
       return c.json(result);
     }
 
-    if (!comparePassword(password, userData.password)) {
+    if (!(await comparePassword(password, userData.password))) {
       result.success = false;
       result.message = "잘못된 회원입니다";
       return c.json(result);
     }
 
     userData.password = "";
+    let payload = instanceToPlain(userData);
 
     // 민증 발급. "999d" 이뜻은 만료기한 999일
-    let userToken = generateToken(userData, "999d");
+    let userToken = generateToken(payload, "999d");
     // 유저의 회원가입 정보 전체 + 민증 data에 실어서 보내기
     result.data = { userData: userData, userToken: userToken };
     return c.json(result);
@@ -104,7 +105,7 @@ auth.post("/login", async (c) => {
 });
 
 // 보호된 라우트
-auth.get("/protected", async (c) => {
+auth.get("/info", async (c) => {
   let result: { success: boolean; data: any; code: string; message: string } = {
     success: true,
     data: null,
